@@ -1,0 +1,56 @@
+1. how to do tsp by clustering - what conditions should the clusters satisfy?
+
+2. how the ant colony algorithm works for TSP - does using a sparse dist matrix speed it up?
+
+3. how different search algorithm from AIMA works - how do they scale up?
+
+4. what does the tsp of a rectangle dense cluster of points look like - experiment by e.g. colony ant or openopt
+ -- not really good for the solution
+
+5. special case Euclidian TSP - minimal spanning tree 
+
+6. find twin TSP (grid based): re-order the grid (rowsbyrows -> colsbycols, or reverse grid order)
+in each cluster - set the distance matrix entry of existing solution as Inf
+
+
+---------------------- Update of Ideas ---------------------------------
+1. simulated annealing - R package TSP example, opt2 for gen? or n -> z for gen?
+
+2. BLENDING
+Here is a crude method I just scored.
+3 simple steps:
+1) find a good single path. Running LKH for a night gave me a ~5985000 path.
+2) create a 2nd disjoint path by cutting the first path in chunks of 4 and reordering them 1234 -> 2413 ("N" to "Z" method). 
+
+This gave me a 2nd path of ~11200000.
+3) Blend both paths to get them near to their average (by taking good 4 city chunks from the 1st path and substituting them 
+
+with their somewhat worse counterparts from path2)
+The result was a 8670000 score. Nothing to write home about, but this is as crude a method as I can think of (only takes 
+
+some shuffling in a spreadsheet program). Even using nearest neighbor for finding the 2nd path is likely to score better.
+
+http://www.kaggle.com/c/traveling-santa-problem/forums/t/3446/scores-of-crude-methods?page=2
+
+MODIFICATION OF THE IDEA - WE ALREADY HAVE TWO GOOD RESULTS BASED ON SAME GRIDING, CONNECT THEM CHUNK BY CHUNK, WITH GREEDY 
+
+SEARCH - WHICH IS MAKING THE ACCUMULATIVE DELTA CLOSE TO ZERO.
+
+3. ADAPTIVE GRIDING
+For finding closest points try something like this (its not exactly a kd-tree, but its fast and easy to code):
+
+Pick reasonable big N (2000 is ok) and cut plane into sectors of width N.
+For each sector create list of points belonging there.
+Find closest points for each point by using sectors.
+
+Now comes the tricky part. This solution obviously cannot find all closest points (because of points close to boundaries of 
+
+sectors). The trick is to repeat algorithm above but first add N/2 to each point coordinate.
+
+http://www.kaggle.com/c/traveling-santa-problem/forums/t/3464/what-data-structures-are-you-all-using
+
+
+4. WORKFLOW and GENERAL STRATEGY
+http://www.kaggle.com/c/traveling-santa-problem/forums/t/3467/what-is-your-workflow
+
+5. greedy 2-opt improve on twin-tour
