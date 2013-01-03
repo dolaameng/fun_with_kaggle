@@ -1,4 +1,4 @@
-setwd("~/Dropbox/kaggle/santa/RWithConcorde")
+setwd("~/workspace/fun_with_kaggle/santa/RWithConcorde")
 
 library(TSP)
 library(doMC)

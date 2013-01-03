@@ -4,7 +4,7 @@
 ## 1. for connecting grid - reorder them 
 ## (e.g., rowsbyrows -> colsbycols OR reverse grid order OR specifying different starting node)
 ## 2. for within each grid - change the distance matrix to make the existing path entry INF
-setwd("~/Dropbox/kaggle/santa/RWithConcorde")
+setwd("~/workspace/fun_with_kaggle/santa/RWithConcorde")
 library(TSP)
 library(doMC)
 registerDoMC(cores=4)

@@ -8,7 +8,7 @@
 ## COMPARED WITH GRID_TWIN_TSP, the main difference is that the twin solution can use a different
 ## grid (usually bigger, rougher) from the first solution. This allows more "neighbors" available
 ## for a node
-setwd("~/Dropbox/kaggle/santa/RWithConcorde")
+setwd("~/workspace/fun_with_kaggle/santa/RWithConcorde")
 library(TSP)
 library(doMC)
 registerDoMC(cores=4)
