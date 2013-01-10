@@ -4,66 +4,26 @@
 ## 1. for connecting grid - reorder them 
 ## (e.g., rowsbyrows -> colsbycols OR reverse grid order OR specifying different starting node)
 ## 2. for within each grid - change the distance matrix to make the existing path entry INF
-
-## COMPARED WITH GRID_TWIN_TSP, the main difference is that the twin solution can use a different
-## grid (usually bigger, rougher) from the first solution. This allows more "neighbors" available
-## for a node
-setwd("~/Dropbox/kaggle/santa/RWithConcorde")
+setwd("~/workspace/fun_with_kaggle/santa/RWithConcorde")
 library(TSP)
 library(doMC)
 registerDoMC(cores=4)
 
 ##load the existing grided TSP solution
 load('tspgridtour.RData')
-## OVERWRITE nrow, ncol HERE!!!!!!!!!!!!
-nrow <- 8
-ncol <- 8
-## load city coordinates
-cities <- read.csv('../data/santa_cities.csv', header = T)
-## function of making equal-sized grid in the map
-make.grids <- function(data.x.y, nrow, ncol, xrange=20000, yrange=20000) {
-  x.breaks <- (0:ncol) * xrange / ncol
-  y.breaks <- (0:nrow) * yrange / nrow
-  x.grids <- as.integer(cut(data.x.y$x, breaks=x.breaks, right=T, include.lowest=T))
-  y.grids <- as.integer(cut(data.x.y$y, breaks=y.breaks, right=T, include.lowest=T))
-  data.x.y$xregion <- as.factor(x.grids)
-  data.x.y$yregion <- as.factor(y.grids)
-  return (data.x.y)
-}
-## redo city grids based on new nrow, ncol
-city.grids <- make.grids(cities, nrow = nrow, ncol = ncol)
-grid.index <- matrix(nrow = 2, ncol = nrow*ncol)
-for (xgrid in 1:ncol) {
-  for (ygrid in 1:nrow) {
-    grid.index[,(xgrid-1)*ncol + ygrid] <- c(xgrid, ygrid)
-  }
-}
-## FIRST TSP SOLUTION AS REFERENCE
-tsp.tour <- c(unlist(grided.tours))
 ##-- build the tour_orders - row by row (the order of grided.tours)
 ##--tour_orders = sapply(1:ncol, function(c){if (c%%2==1) (c-1)*nrow+seq(1,nrow) else (c-1)*nrow+seq(nrow, 1)})
 ##--tour_orders = as.vector(tour_orders)
 ## make the distance matrix entry on existing tour VERY LARGE
 BIG.NUM <- Inf#100000000 # within 2k x 2k
-jam_dist_matrix <- function(dist.matrix){
-  city.labels <- labels(dist.matrix)
+jam_dist_matrix <- function(dist.matrix, grid.tour){
   dist.matrix <- as.matrix(dist.matrix)
-  for(city in city.labels) {
-    icity <- which(tsp.tour == city)
-    if (icity > 1) {
-      precity <- tsp.tour[icity-1]
-      if (precity %in% city.labels) {
-        dist.matrix[precity, city] <- BIG.NUM
-        dist.matrix[city, precity] <- BIG.NUM
-      }
-    }
-    if (icity < length(tsp.tour)) {
-      nextcity <- tsp.tour[icity+1]
-      if (nextcity %in% city.labels) {
-        dist.matrix[nextcity, city] <- BIG.NUM
-        dist.matrix[city, nextcity] <- BIG.NUM
-      }
-    }
+  stopifnot(nrow(dist.matrix) == length(grid.tour))
+  for(i in 1:(length(grid.tour)-1)) {
+    city1 <- grid.tour[i]
+    city2 <- grid.tour[i+1]
+    dist.matrix[city1, city2] <- BIG.NUM
+    dist.matrix[city2, city1] <- BIG.NUM
   }
   return (as.dist(dist.matrix))
 }
@@ -72,7 +32,8 @@ twin.tours <- foreach(xy = grid.index, .packages=c('TSP'), .inorder = F) %dopar%
   xindex <- xy[1]
   yindex <- xy[2]
   dist.matrix <- with(city.grids, dist(city.grids[xregion==xindex & yregion==yindex, 2:3]))
-  dist.matrix <- jam_dist_matrix(dist.matrix)
+  grid.tour <- grided.tours[[(xindex-1) * ncol + yindex]] ## ALWAYS (x-1) * ncol + y
+  dist.matrix <- jam_dist_matrix(dist.matrix, grid.tour)
   tsp <- TSP(dist.matrix)
   tour <- solve_TSP(tsp, method="linkern")
   #tour <- solve_TSP(tsp, method="nn")
@@ -85,9 +46,14 @@ complete_tour <- function(grid.index, tsp.tours, city.grids) {
   tours <- sapply(tsp.tours, function(p.t){p.t[[2]]})
   inner_tours_length = sum(sapply(tsp.tours, function(p.t){tour_length(p.t[[1]], p.t[[2]])}))
   #wrong - tour_orders = sapply(1:nrow, function(r){if (r%%2==1) (r-1)*ncol+seq(1,ncol) else (r-1)*ncol+seq(ncol, 1)})
-  tour_orders = sapply(1:ncol, function(c){if (c%%2==1) (c-1)*nrow+seq(1,nrow) else (c-1)*nrow+seq(nrow, 1)})
-  ## use the reverse order for grid
-  tour_orders = rev(as.vector(tour_orders))
+  tour_orders <- sapply(1:ncol, function(c){if (c%%2==1) (c-1)*nrow+seq(1,nrow) else (c-1)*nrow+seq(nrow, 1)})
+  ## -- use the reverse order for grid
+  ## -- tour_orders = rev(as.vector(tour_orders))
+  ## DONT use the reverse order for grid - for easy later blending
+  tour_orders <- as.vector(tour_orders)
+  ## WRITE chunk size file for further blending
+  chunk.sizes <- unlist(sapply(tours[tour_orders], function(t){length(labels(t))}))
+  write.table(chunk.sizes, file = './chunk_sizes.csv', sep = '\r\n', row.names = F, col.names = F)
   ## calculate the outer tour length
   outer_tours_length <- 0
   for(i in 1:(length(tour_orders)-1)) {
