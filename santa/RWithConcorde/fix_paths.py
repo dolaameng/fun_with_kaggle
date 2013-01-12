@@ -15,9 +15,10 @@ if __name__ == '__main__':
     ## very simple fixing in (a, b, c), (a, b) is duplicated, exchange b, c -> (a, c, b)
     total_fixed = 0
     offset = 1
-    for i in xrange(len(twin_path)-1):
+    for i in xrange(len(twin_path)-2):
         if (twin_path[i], twin_path[i+1]) in tsp_edges:
             total_fixed += 1
+            #print i, i+1+offset
             twin_path[i+1], twin_path[i+1+offset] = twin_path[i+1+offset], twin_path[i+1]
     ## save twin path solution
     open(sys.argv[2], 'w').write('\r\n'.join([str(city + 1) for city in twin_path]))

@@ -1,4 +1,4 @@
-setwd("~/workspace/x/kaggle/santa/RWithConcorde")
+setwd("~/workspace/fun_with_kaggle/santa/RWithConcorde")
 
 library(TSP)
 library(doMC)
@@ -6,6 +6,7 @@ registerDoMC(cores=4)
 ## function of making equal-sized grid in the map
 make.grids <- function(data.x.y, nrow, ncol, xrange=20000, yrange=20000) {
   x.breaks <- (0:ncol) * xrange / ncol
+  #x.breaks <- c(0, 1000 + (0:ncol) * xrange / ncol)
   y.breaks <- (0:nrow) * yrange / nrow
   x.grids <- as.integer(cut(data.x.y$x, breaks=x.breaks, right=T, include.lowest=T))
   y.grids <- as.integer(cut(data.x.y$y, breaks=y.breaks, right=T, include.lowest=T))
