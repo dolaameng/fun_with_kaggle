@@ -1,0 +1,25 @@
+1. OUTPUT: (interested, not_interested), (0, 0) about 10%, (1, 1) - none (could be a hard constraint)
+
+2. INPUT:(relevance extraction) - whether a user is interested in an event, depends on (roughly ranking)
+whether_user_is_invited - in train/test
+user_location
+user_local
+event_city_state_country_lat_long (if not missing)
+event_topic_term_of_freq(common words)
+user_birthyear
+user_gender
+user_friends_event_creator
+user_friends_event_invited
+time_of_event
+time_user_see_event
+user_jointime
+user_attendee_intention (yes/maybe/invitited to/not going)
+
+3. to explore
+(*) common missing values - None
+(*) parse date - use pd.csv and dateutil.parser
+(*) all users in test are in users.csv - yes
+(*) all events in test are in events.csv - yes
+(*) read and efficiently use large events.csv - ?? iterator=true
+(*) handle missing values
+(*) correlation between each inputs and output
