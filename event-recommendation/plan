@@ -19,7 +19,14 @@ user_attendee_intention (yes/maybe/invitited to/not going)
 (*) common missing values - None
 (*) parse date - use pd.csv and dateutil.parser
 (*) all users in test are in users.csv - yes
+(*) all users in test are in train.csv - NO (1357 not in train)
 (*) all events in test are in events.csv - yes
+(*) all events in test are in train.csv - NO (4572 not in train) - not really matter?
 (*) read and efficiently use large events.csv - ?? iterator=true
 (*) handle missing values
 (*) correlation between each inputs and output
+
+(*) preference representation - 4-value (not_interested 0, empty 1, interested 2)
+3-value (not_interested 0, interested 1) TOO SPARSE FOR PEARSON, 2-value (interested) COULD TOO SPARSE FOR PEARSON
+(*) similarity measure - pearson is less preferred bcs there aint a lot of rating values, so the variance of one users preference is easy to be zero, not to mention the overlapping of different users are sparse.
+(*) for boolean preference, use TanimotoCoefficientSimilarity/LogLikelihoodSimilarity might give better result
