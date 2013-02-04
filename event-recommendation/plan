@@ -30,3 +30,40 @@ user_attendee_intention (yes/maybe/invitited to/not going)
 3-value (not_interested 0, interested 1) TOO SPARSE FOR PEARSON, 2-value (interested) COULD TOO SPARSE FOR PEARSON
 (*) similarity measure - pearson is less preferred bcs there aint a lot of rating values, so the variance of one users preference is easy to be zero, not to mention the overlapping of different users are sparse.
 (*) for boolean preference, use TanimotoCoefficientSimilarity/LogLikelihoodSimilarity might give better result
+
+4. to experiment with
+(---) challenge is: 
+(--1) some users and events have no overlapping - sparseness
+(--2) some users or events have never been in training - anonymous/new users (cold start problem)
+
+(1) As a recommendation system:
+
+(*) data representation - boolean/three-valued/real-valued preference?
+(**) how to capture ignorance/noise?
+(**) be smart about the data - use events and creator as another train dataset, not it is sparse
+(**) modeling "like" relation - is modeling "not like" really that useful?
+
+(*) collaborative filtering / content based recommendation
+
+(*) user/item based recommendation 
+(**) number of users/events - computation time
+(**) ratings say more about users or events? - bidirectional?
+
+(*) recommendation similarity (and neigbhorhood for user-based):
+(**) performance of different similarity measures
+(**) how to customize them by domain-specific knowledge injection?
+(**) neighborhood size k or threshold
+(**) be careful with Tanimoto and log-likelihood similarity when used with certain data representation
+
+(*) injection of domain-specific knowledge
+(**) customized ItemSimilarity/UserSimilarity
+(**) customized recommendation system with a rescorer
+
+(*) recommendation methods
+
+(*) combined models - 
+(**) use some collaborative filtering to find a LARGE enough candidates of recommendation items
+(**) use classification approach or other models to refine the recommendation list
+
+(2) As a classification and/or combined system:
+(*) just found the submission should be RANKING events in the given set in test. that makes more sense now to treat it as a CLASSIFICATION problem!

@@ -34,7 +34,7 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
 public class SimpleUserRecommendation {
 	
-	private static String dataFile = "../data/train_user_events_pref.csv";
+	private static String dataFile = "../data/big_user_events_pref.csv";
 	
 	public static void run() throws Exception {
 		//data model
@@ -55,33 +55,37 @@ public class SimpleUserRecommendation {
 				//UserSimilarity similarity = new TanimotoCoefficientSimilarity(dataModel);
 				UserSimilarity similarity = new LogLikelihoodSimilarity(dataModel);
 				UserNeighborhood neighborhood = 
-						new NearestNUserNeighborhood(100, similarity, dataModel);
-				//return new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
+						new NearestNUserNeighborhood(5, similarity, dataModel);
+				return new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
 				//return new SlopeOneRecommender(dataModel);
-				//return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel, 15, 0.05, 10));
-				return new TreeClusteringRecommender(dataModel, 
-						new FarthestNeighborClusterSimilarity(similarity), 
-						10);
+				//return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel, 5, 0.05, 10));
+//				return new TreeClusteringRecommender(dataModel, 
+//						new FarthestNeighborClusterSimilarity(similarity), 
+//						10);
 			}
 		};
 		// try to make recommendations
 		Recommender recommender = recommenderBuilder.buildRecommender(data);
+		System.out.println("build model done");
+		/*
+		//System.out.println(recommender.recommend(0, 1)); faked NEW user, return []
 		Iterator uids = data.getUserIDs();
 		Long numWithoutRec = 0L;
 		while (uids.hasNext()) {
 			Long uid = (Long) uids.next();
 			
 			List<RecommendedItem> items = recommender.recommend(uid, 10);
-			//System.out.println(uid + ":" + items.size());
+			System.out.println(uid + ":" + items.size());
 			if (items.size() == 0) {
 				numWithoutRec += 1;
 			}
 		}
 		System.out.println(numWithoutRec*100./data.getNumUsers() 
 				+ "% users cannot get recommendations");
+		*/
 		
 		// profiling score
-		double score = evaluator.evaluate(recommenderBuilder, null, data, 0.8, 1.0);
+		double score = evaluator.evaluate(recommenderBuilder, null, data, 0.8, 0.02);
 		System.out.println("average absolute difference: " + score);
 		
 		// profiling precision and recall

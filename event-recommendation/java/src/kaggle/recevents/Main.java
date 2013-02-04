@@ -8,7 +8,7 @@ import org.apache.mahout.cf.taste.model.DataModel;
 public class Main {
 	
 	public static void main(String[] args) throws Exception {
-		//SimpleUserRecommendation.run();
-		SimpleItemRecommendation.run();
+		SimpleUserRecommendation.run();
+		//SimpleItemRecommendation.run();
 	}
 }
