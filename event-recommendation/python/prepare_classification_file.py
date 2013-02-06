@@ -81,7 +81,7 @@ def fill_train_with_attendence(train):
     ## NOTE: PPL WHO ARE INTERESTED MAY NOT BE INVITED IN THE FIRST PLACE
     ## AND VICE VERSA 
     event_set = set(train['event']) # 8846 events
-    attendence_headers = ['event', 'event_interets', 'event_potential_interets', 'event_invites', 'event_nointerests']
+    attendence_headers = ['event', 'event_interests', 'event_potential_interests', 'event_invites', 'event_nointerests']
     with open(attendence_path, 'r') as fattendence:
         reader = csv.reader(fattendence)
         reader.next() ## ignore headers reading
@@ -103,9 +103,8 @@ def fill_train_with_event_clustering(train):
     ## fill in the event clustering information in the train data
     ## TODO ?? 
     return train
-    
-def post_process(train):
-    ## 1. add the friend_with_creator field based on user and creator
+
+def load_user_friends(train):
     ## build user_id indexing from train
     user_set = set(train['user']) ## 2034 users in train
     with open(friends_path, 'r') as ffriends:
@@ -115,28 +114,81 @@ def post_process(train):
         user_friends = dict([[int(user), set([int(user)]+[int(f) for f in friends.split(' ')])] 
                             for (user, friends) in reader
                             if int(user) in user_set])
+    return user_friends
+    
+def load_event_attendees(train):
+    ## build event_id index
+    def toints(intstr):
+        return [] if not intstr else map(int, intstr.split(' '))
+
+    event_set = set(train['event'])
+    with open(attendence_path, 'r') as fattendence:
+        reader = csv.reader(fattendence)
+        reader.next() ## ignore headers reading
+        headers = ['ppl_interest', 'ppl_maybe', 'ppl_invited', 'ppl_notinterest']
+        event_attendees = {}
+        for (event, ppl_interest, ppl_maybe, ppl_invited, ppl_notinterest) in reader:
+            if int(event) in event_set:
+                event_attendees[int(event)] = dict(zip(
+                    headers,
+                    [toints(ppl_interest), 
+                    toints(ppl_maybe), 
+                    toints(ppl_invited), 
+                    toints(ppl_notinterest)]
+                ))
+
+    return event_attendees
+    
+def fill_friend_attendees(train, user_friends, event_attendees):
+    attendee_headers = ['user', 'event', 'interested_frnds', 'maybe_frnds', 'invited_frnds', 'notinterested_frnds']
+    attendee_data = []
+    for (i, uid, eid) in train[['user', 'event']].itertuples():
+        friends = set(user_friends[uid])
+        interested_frnds = len(set(event_attendees[eid]['ppl_interest']).intersection(friends))
+        maybe_frnds = len(set(event_attendees[eid]['ppl_maybe']).intersection(friends))
+        invited_frnds = len(set(event_attendees[eid]['ppl_invited']).intersection(friends))
+        notinterested_frnds = len(set(event_attendees[eid]['ppl_notinterest']).intersection(friends))
+        attendee_data.append([uid, eid, interested_frnds, maybe_frnds, invited_frnds, notinterested_frnds])
+    attendee_friends = DataFrame(attendee_data, columns=attendee_headers)
+    return pd.merge(train, attendee_friends, on = ['user', 'event'])
+    
+def post_process(train):
+    ## 1. add the friend_with_creator field based on user and creator
+    ## load user_friends data
+    user_friends = load_user_friends(train)    
     train['friend_with_creator'] = train.apply(
                                 lambda r: r['event_creator'] in user_friends[r['user']], 
                                 axis = 1)
+    ## 2. add friends_interested, friends_maybe, friends_not_interested
+    event_attendees = load_event_attendees(train)
+    train = fill_friend_attendees(train, user_friends, event_attendees)
                                 
-    ## 2. normalize missing values - fill all the ' ' empty values with 'NA'
+    ## 3. normalize missing values - fill all the ' ' empty values with 'NA'
     train = train.apply(
                 lambda r: [(normalized_na if e in na_values else e) for e in r], 
                 axis = 1)
-    ## 3. notification ahead of event
+    ## 4. notification ahead of event
     train['notification_ahead_hrs'] = train.apply(
                                 lambda r: (parse(r['event_start_time']) - parse(r['timestamp'])).total_seconds() / 3600., 
                                 axis = 1)
-    ## 4. age
+    ## 5. age
     train['user_age'] = train.apply(
                                 lambda r: 2013 - int(r['user_birthyear']) if r['user_birthyear'] is not normalized_na else normalized_na, 
                                 axis = 1)
-    ## 5. select the most significant features
+    ## 6. select the most significant features
     ## select the useful features only
-    inputs_in_use = ['invited', 'event_city']
-    outputs_in_use = []
+    inputs_in_use = ['user', 'event',
+                    'invited', 'event_city', 
+                    'event_country', 'user_locale',
+                    'user_gender', 'user_location',
+                    'event_interests', 'event_potential_interests',
+                    'event_invites', 'event_nointerests',
+                    'notification_ahead_hrs', 'user_age',
+                    'interested_frnds', 'maybe_frnds', 'invited_frnds', 
+                    'notinterested_frnds']
+    outputs_in_use = ['interested', 'not_interested']
     ## TODO
-    #train = train[inputs_in_use+outputs_in_use]
+    train = train[inputs_in_use+outputs_in_use]
     return train
     
 def data_to_file(train, fpath):
