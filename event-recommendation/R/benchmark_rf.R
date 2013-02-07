@@ -17,9 +17,15 @@ imputation.method <- function(data){return (imputation(imethod='hotdeck',data,Va
 test.set <- read.csv('../data/test_classifier.csv', header=T)
 ## load train data
 train.set <- read.csv('../data/train_classifier.csv', header=T)
-locale.levels = union(levels(train.set$user_local), levels(test.set$user_local))
-train.set <- transform(train.set, user_locale=factor(user_locale, levels=locale.levels))
-test.set <- transform(test.set, user_locale=factor(user_locale, levels=locale.levels))
+locale.levels <- union(levels(train.set$user_local), levels(test.set$user_local))
+train.set$topic <- as.factor(train.set$topic)
+test.set$topic <- as.factor(test.set$topic)
+topic.levels <- union(levels(train.set$topic), levels(test.set$topic))
+## factorize
+train.set <- transform(train.set, user_locale=factor(user_locale, levels=locale.levels),
+                                  topic=factor(topic, levels=topic.levels))
+test.set <- transform(test.set, user_locale=factor(user_locale, levels=locale.levels),
+                                topic=factor(topic, levels=topic.levels))
 ## handle missing values - mainly in gender and age
 train.set <- imputation.method(train.set)
 test.set <- imputation.method(test.set)
@@ -31,7 +37,7 @@ train.set_train <- train.set[-train.set_validation.index, features]
 train.set_validation <- train.set[train.set_validation.index, features]
 
 ## build randomForest model in parallel
-rf.model <- foreach(ntree=rep(200,4), .combine=combine, .packages="randomForest", .inorder=F) %dopar% {
+rf.model <- foreach(ntree=rep(200,8), .combine=combine, .packages="randomForest", .inorder=F) %dopar% {
   randomForest(interest_rank~., data=train.set_train, 
                ntree=ntree, importance=T, na.action=na.roughfix, replace = F)
 }
@@ -39,7 +45,7 @@ rf.model <- foreach(ntree=rep(200,4), .combine=combine, .packages="randomForest"
 print (rmse(train.set_validation$interest_rank, 
            predict(rf.model, newdata=train.set_validation, type='response')))
 ## predict on test data
-test.prediction <- predict(rf.model, newdata=test.set, type='response', na.action=na.roughfix)
+test.prediction <- predict(rf.model, newdata=test.set, type='response')
 test.set <- transform(test.set, interest_rank=test.prediction)
 ## write test to csv
 write.csv(test.set, '../data/test_predictions.csv', row.names=F)
