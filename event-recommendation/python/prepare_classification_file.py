@@ -26,6 +26,7 @@ attendence_path = '../data/event_attendees.csv'
 na_values = ['None', ' ', 'NA', '']
 normalized_na = 'NA'
 
+
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
@@ -141,6 +142,24 @@ def load_event_attendees(train):
     
 def fill_friend_attendees(train, user_friends, event_attendees):
     attendee_headers = ['user', 'event', 'interested_frnds', 'maybe_frnds', 'invited_frnds', 'notinterested_frnds']
+    train['interested_frnds'] = train.apply(
+    lambda r: len(set(event_attendees[r['event']]['ppl_interest']).intersection(set(user_friends[r['user']]))),
+    axis = 1
+    )
+    train['maybe_frnds'] = train.apply(
+    lambda r: len(set(event_attendees[r['event']]['ppl_maybe']).intersection(set(user_friends[r['user']]))),
+    axis = 1
+    )
+    train['invited_frnds'] = train.apply(
+    lambda r: len(set(event_attendees[r['event']]['ppl_invited']).intersection(set(user_friends[r['user']]))),
+    axis = 1
+    )
+    train['notinterested_frnds'] = train.apply(
+    lambda r: len(set(event_attendees[r['event']]['ppl_notinterest']).intersection(set(user_friends[r['user']]))),
+    axis = 1
+    )
+    return train
+    """
     attendee_data = []
     for (i, uid, eid) in train[['user', 'event']].itertuples():
         friends = set(user_friends[uid])
@@ -150,23 +169,30 @@ def fill_friend_attendees(train, user_friends, event_attendees):
         notinterested_frnds = len(set(event_attendees[eid]['ppl_notinterest']).intersection(friends))
         attendee_data.append([uid, eid, interested_frnds, maybe_frnds, invited_frnds, notinterested_frnds])
     attendee_friends = DataFrame(attendee_data, columns=attendee_headers)
-    return pd.merge(train, attendee_friends, on = ['user', 'event'])
+    print 'DEBUG: attendee_friends len: ', len(attendee_friends)
+    return pd.merge(train, attendee_friends, on = ['user', 'event'], how = 'right')
+    """
     
-def post_process(train):
+def post_process(train, is_train):
     ## 1. add the friend_with_creator field based on user and creator
     ## load user_friends data
     user_friends = load_user_friends(train)    
     train['friend_with_creator'] = train.apply(
                                 lambda r: r['event_creator'] in user_friends[r['user']], 
                                 axis = 1)
+    print 'finish adding friend_with_creator', len(train)
+    
     ## 2. add friends_interested, friends_maybe, friends_not_interested
     event_attendees = load_event_attendees(train)
     train = fill_friend_attendees(train, user_friends, event_attendees)
+    print 'finish adding friends_xx', len(train)
+    
                                 
     ## 3. normalize missing values - fill all the ' ' empty values with 'NA'
     train = train.apply(
                 lambda r: [(normalized_na if e in na_values else e) for e in r], 
                 axis = 1)
+                
     ## 4. notification ahead of event
     train['notification_ahead_hrs'] = train.apply(
                                 lambda r: (parse(r['event_start_time']) - parse(r['timestamp'])).total_seconds() / 3600., 
@@ -175,23 +201,62 @@ def post_process(train):
     train['user_age'] = train.apply(
                                 lambda r: 2013 - int(r['user_birthyear']) if r['user_birthyear'] is not normalized_na else normalized_na, 
                                 axis = 1)
-    ## 6. select the most significant features
+    
+    ## 6. user location -- factor too many levels
+    ## event_city, event_country, and user_local are relatively clean
+    ## user_location contains a string (not well formatted)
+    ## create new fields - 
+    ## user_in_event_city, user_in_event_country, ??-user_in_event_lang(uage)
+    train['user_in_event_city'] = train.apply(
+        lambda r: r['event_city'].lower() in r['user_location'].lower(),
+        axis = 1
+    )
+    train['user_in_event_country'] = train.apply(
+        lambda r: r['event_country'].lower() in r['user_location'].lower(),
+        axis = 1
+    )
+
+    
+    ## 7. output ranking - ranking or regression - only for train data
+    ## using invited and interested - is it a output leakage??
+    ## notinterested1_invited1(_interested0) =>1 11
+    ## notinterested1_invited0(_interested0) =>2 503
+    ## notinterested0_interested0_invited1 =>3 558
+    ## notinterested0_interested0_invited0 =>4 10573
+    ## (notinterested0)_interested1_invited1 =>5 125
+    ## (notinterested0)_interested1_invited0 =>6 4006
+    print 'DEBUG: is_train=', is_train
+    if is_train:
+        def get_rank(row):
+            invited, interested, not_interested = row['invited'], row['interested'], row['not_interested']
+            return (1 if not_interested==1 and invited==1
+                        else 2 if not_interested==1 and invited==0
+                        else 3 if not_interested==0 and interested==0 and invited==1
+                        else 4 if not_interested==0 and interested==0 and invited==0
+                        else 5 if interested==1 and invited==1
+                        else 6)
+        train['interest_rank'] = train.apply(get_rank, axis = 1)
+    
+    
+    ## 8. select the most significant features
     ## select the useful features only
     inputs_in_use = ['user', 'event',
-                    'invited', 'event_city', 
-                    'event_country', 'user_locale',
-                    'user_gender', 'user_location',
+                    'invited',
+                    'user_locale',
+                    'user_in_event_city', 'user_in_event_country',
+                    'user_gender',
                     'event_interests', 'event_potential_interests',
                     'event_invites', 'event_nointerests',
                     'notification_ahead_hrs', 'user_age',
                     'interested_frnds', 'maybe_frnds', 'invited_frnds', 
                     'notinterested_frnds']
-    outputs_in_use = ['interested', 'not_interested']
-    ## TODO
+    #outputs_in_use = ['interested', 'not_interested', 'interest_rank']
+    outputs_in_use = ['interest_rank'] if is_train else []
     train = train[inputs_in_use+outputs_in_use]
     return train
     
 def data_to_file(train, fpath):
+    train = train.sort('user')
     train.to_csv(fpath, na_rep=normalized_na, header=True, index=False)
      
 
@@ -203,35 +268,37 @@ def main():
     ## load train.csv as a dataframe, use csv file reader for others
     
     ## read original and dest file path from command line
-    if len(sys.argv) is not 3:
-        print 'Usage: %s original_file dest_file' % (sys.argv[0], )
+    if len(sys.argv) is not 4:
+        print 'Usage: %s original_file dest_file train|test' % (sys.argv[0], )
         sys.exit(-1)
-    original_path, dest_path = sys.argv[1:]
+    original_path, dest_path, is_train = sys.argv[1:]
+    is_train = True if (is_train == 'train') else False
+    print 'generate a ', ('TRAIN' if is_train else 'TEST'), 'file...'
     
     ## load original data
     train = load_train_csv(original_path)
-    print 'finished reading original data'
+    print 'finished reading original data', len(train)
     
     ## fill with the events information first
     ## as filling user information with need the 
     ## creator information later
     train = fill_train_with_events(train)
-    print 'finished filling events information'
+    print 'finished filling events information', len(train)
     
     ## fill train data with user information
     train = fill_train_with_users(train)
-    print 'finished filling user information'
+    print 'finished filling user information', len(train)
     
     ## fill train data with attendence (event popularity?) information
     train = fill_train_with_attendence(train)
-    print 'finished filling attendence information'
+    print 'finished filling attendence information', len(train)
     
     ## fill train data with event clustering (based on common words) information
     train = fill_train_with_event_clustering(train)
-    print 'finished filling event clustering information'
+    print 'finished filling event clustering information', len(train)
     
     ## cleansing and creating new fields
-    train = post_process(train)
+    train = post_process(train, is_train)
     print 'finished post-processing train data'
     
     ## write out the new train data to dest file

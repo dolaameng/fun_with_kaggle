@@ -65,10 +65,14 @@ user_attendee_intention (yes/maybe/invitited to/not going)
 (**) use some collaborative filtering to find a LARGE enough candidates of recommendation items
 (**) use classification approach or other models to refine the recommendation list
 
-(2) As a classification and/or combined system:
+(2) As a classification/regression and/or combined system:
 (*) just found the submission should be RANKING events in the given set in test. that makes more sense now to treat it as a CLASSIFICATION problem!
 
 (*) the events are distinguishable enough, but the users are NOT
 (*) ON the other hand, to RANK different events for the same user, we also 
 need events distinguishable for different users
 (*) ideally, users should be classified/clustered first, to form groups, based on their preference on events, and different classifiers are built for each user group, to classify their event interests. 
+
+
+(***) IN TRAIN.CSV, SAME USER_ID, EVENT_ID, DIFFERENT ROWS! e.g. uid, eid = 203456139	1462902079, usually they
+have different NOTIFICATION TIME! so it seems to be fine...
