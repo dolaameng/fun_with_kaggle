@@ -23,7 +23,8 @@ users_path = '../data/users.csv'
 events_path = '../data/events.csv' # large file
 friends_path = '../data/user_friends.csv'
 attendence_path = '../data/event_attendees.csv'
-clusters_path = '../data/event_clusters30.csv'
+clusters_path = '../data/event_clusters32.csv'
+communities_path = '../data/user_communities.csv'
 na_values = ['None', ' ', 'NA', '']
 normalized_na = 'NA'
 
@@ -73,6 +74,10 @@ def fill_train_with_users(train):
                     if int(row[0]) in user_set]
     users = DataFrame(user_data, columns = user_headers)
     return pd.merge(train, users)
+    
+def fill_train_with_communities(train):
+    user_communities = pd.read_csv(communities_path, header = 0)
+    return pd.merge(train, user_communities, how='left')
     
 def fill_train_with_attendence(train):
     ## extract event attendence information (popularity of event)
@@ -191,7 +196,7 @@ def post_process(train, is_train):
     ## load user_friends data
     user_friends = load_user_friends(train)    
     train['friend_with_creator'] = train.apply(
-                                lambda r: r['event_creator'] in user_friends[r['user']], 
+                                lambda r: int(r['event_creator']) in user_friends[r['user']], 
                                 axis = 1)
     print 'finish adding friend_with_creator', len(train)
     
@@ -257,12 +262,12 @@ def post_process(train, is_train):
                     'invited',
                     'user_locale',
                     'user_in_event_city', 'user_in_event_country',
-                    'user_gender',
+                    'user_gender', 'friend_with_creator',
                     'event_interests', 'event_potential_interests',
                     'event_invites', 'event_nointerests',
                     'notification_ahead_hrs', 'user_age',
                     'interested_frnds', 'maybe_frnds', 'invited_frnds', 
-                    'notinterested_frnds', 'topic']
+                    'notinterested_frnds', 'topic', 'user_community']
     #outputs_in_use = ['interested', 'not_interested', 'interest_rank']
     outputs_in_use = ['interest_rank'] if is_train else []
     train = train[inputs_in_use+outputs_in_use]
@@ -301,6 +306,10 @@ def main():
     ## fill train data with user information
     train = fill_train_with_users(train)
     print 'finished filling user information', len(train)
+    
+    ## fill train data with user community
+    train = fill_train_with_communities(train)
+    print 'finished filling user communities', len(train)
     
     ## fill train data with attendence (event popularity?) information
     train = fill_train_with_attendence(train)

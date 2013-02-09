@@ -5,13 +5,13 @@ library(foreach)
 library(doMC)
 registerDoMC(cores=4)
 
-from.start = T
+from.start = F
 
 ## NO NEED TO GENERATE IT EVERY TIME
 ## generate event_ids.csv and event_words.csv from events.csv
 
-#events_path <- '../data/events.csv'
-events_path <- '../data/train_test_events.csv'
+events_path <- '../data/events.csv'
+#events_path <- '../data/train_test_events.csv'
 
 
 if(from.start) {
@@ -24,8 +24,8 @@ if(from.start) {
 event.words <- read.big.matrix('../data/event_words.csv', sep=',', header=T, type='integer')
 
 ## kmeans clustering - about 15 mins
-k = 30 ## SIMPLY BECAUSE RANDOMFOREST IN R DOEST ALLOW MORE THAN 32 LEVELS
-event.clusters <- bigkmeans(event.words, centers=k, nstart=4, iter.max = 500)
+k = 32 ## SIMPLY BECAUSE RANDOMFOREST IN R DOEST ALLOW MORE THAN 32 LEVELS
+event.clusters <- bigkmeans(event.words, centers=k, nstart=4, iter.max = 20)
 
 
 ## write results
