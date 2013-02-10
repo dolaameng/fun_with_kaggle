@@ -289,7 +289,7 @@ def post_process(train, is_train):
                         else 3 if not_interested==0 and interested==0 and invited==1
                         else 4 if not_interested==0 and interested==0 and invited==0
                         else 5 if interested==1 and invited==1
-                        else 6) - row['event_interests_ratio']
+                        else 6) - row['event_interests_ratio'] #+ row['event_nointerests_ratio']
         train['interest_rank'] = train.apply(get_rank, axis = 1)
     
     
