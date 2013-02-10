@@ -44,9 +44,9 @@ train.set_validation <- train.set[train.set_validation.index, features]
 
 ## build randomForest model in parallel
 ## use whole set to train
-rf.model <- foreach(ntree=rep(200,8), .combine=combine, .packages="randomForest", .inorder=F) %dopar% {
+rf.model <- foreach(ntree=rep(400,8), .combine=combine, .packages="randomForest", .inorder=F) %dopar% {
   randomForest(interest_rank~., data=train.set[,features], 
-               ntree=ntree, importance=T, na.action=na.roughfix, replace = F)
+               ntree=ntree, importance=T, na.action=na.roughfix)
 }
 ## validate the built model
 print (rmse(train.set_validation$interest_rank, 

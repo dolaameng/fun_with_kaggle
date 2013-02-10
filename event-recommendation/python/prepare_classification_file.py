@@ -97,12 +97,17 @@ def fill_train_with_attendence(train):
         attendence_data = []
         for (event_id, ppl_interest, ppl_maybe, ppl_invited, ppl_notinterest) in reader:
             if int(event_id) in event_set:
+                (ppl_interest, ppl_maybe, ppl_invited, ppl_notinterest) = [
+                                            ppl_interest.split(' '),
+                                            ppl_maybe.split(' '),
+                                            ppl_invited.split(' '),
+                                            ppl_notinterest.split(' ')]
                 (n_interest, n_maybe, n_invited, n_notinterested) = [
-                                            len(ppl_interest.split(' ')),
-                                            len(ppl_maybe.split(' ')),
-                                            len(ppl_invited.split(' ')),
-                                            len(ppl_notinterest.split(' '))]
-                n_total = sum((n_interest, n_maybe, n_invited, n_notinterested)) * 1.
+                                            len(ppl_interest),
+                                            len(ppl_maybe),
+                                            len(ppl_invited),
+                                            len(ppl_notinterest)]
+                n_total = len(set(sum((ppl_interest, ppl_maybe, ppl_invited, ppl_notinterest), []))) * 1.
                 attendence_data.append([int(event_id), 
                                         n_interest, n_maybe,
                                         n_invited, n_notinterested,
@@ -284,14 +289,14 @@ def post_process(train, is_train):
                         else 3 if not_interested==0 and interested==0 and invited==1
                         else 4 if not_interested==0 and interested==0 and invited==0
                         else 5 if interested==1 and invited==1
-                        else 6)
+                        else 6) - row['event_interests_ratio']
         train['interest_rank'] = train.apply(get_rank, axis = 1)
     
     
     ## 8. select the most significant features
     ## select the useful features only
     inputs_in_use = ['user', 'event',
-                    'invited',
+                    'invited', ## invited is an output leakage - but it proves useful
                     'user_locale',
                     'user_in_event_city', 'user_in_event_country',
                     'user_gender', 'friend_with_creator',
