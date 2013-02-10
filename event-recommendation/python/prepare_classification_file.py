@@ -88,18 +88,26 @@ def fill_train_with_attendence(train):
     ## NOTE: PPL WHO ARE INTERESTED MAY NOT BE INVITED IN THE FIRST PLACE
     ## AND VICE VERSA 
     event_set = set(train['event']) # 8846 events
-    attendence_headers = ['event', 'event_interests', 'event_potential_interests', 'event_invites', 'event_nointerests']
+    attendence_headers = ['event', 
+        'event_interests', 'event_potential_interests', 'event_invites', 'event_nointerests',
+        'event_interests_ratio', 'event_potential_interests_ratio', 'event_invites_ratio', 'event_nointerests_ratio']
     with open(attendence_path, 'r') as fattendence:
         reader = csv.reader(fattendence)
         reader.next() ## ignore headers reading
         attendence_data = []
         for (event_id, ppl_interest, ppl_maybe, ppl_invited, ppl_notinterest) in reader:
             if int(event_id) in event_set:
+                (n_interest, n_maybe, n_invited, n_notinterested) = [
+                                            len(ppl_interest.split(' ')),
+                                            len(ppl_maybe.split(' ')),
+                                            len(ppl_invited.split(' ')),
+                                            len(ppl_notinterest.split(' '))]
+                n_total = sum((n_interest, n_maybe, n_invited, n_notinterested)) * 1.
                 attendence_data.append([int(event_id), 
-                                        len(ppl_interest.split(' ')),
-                                        len(ppl_maybe.split(' ')),
-                                        len(ppl_invited.split(' ')),
-                                        len(ppl_notinterest.split(' '))])
+                                        n_interest, n_maybe,
+                                        n_invited, n_notinterested,
+                                        n_interest/n_total, n_maybe/n_total,
+                                        n_invited/n_total, n_notinterested/n_total,])
     attendence = DataFrame(attendence_data, columns = attendence_headers)
     return pd.merge(train, attendence)
 
@@ -116,7 +124,7 @@ def fill_train_with_event_clustering(train):
         reader = csv.reader(fclusters)
         reader.next() # ignore headers line
         clusters_data = [
-            [int(float(event_id)), int(cluster)]
+            [int(float(event_id)), "topic"+cluster]
             for (event_id, cluster) in reader
             if int(float(event_id)) in event_set
         ]
@@ -191,6 +199,27 @@ def fill_friend_attendees(train, user_friends, event_attendees):
     return pd.merge(train, attendee_friends, on = ['user', 'event'], how = 'right')
     """
     
+def fill_friend_attendee_ratios(train, user_friends, event_attendees):
+    attendee_headers = ['user', 'event', 'interested_frnds_ratio', 
+        'maybe_frnds_ratio', 'invited_frnds_ratio', 'notinterested_frnds_ratio']
+    train['interested_frnds_ratio'] = train.apply(
+    lambda r:  r['interested_frnds'] * 1./ len(user_friends[r['user']]),
+    axis = 1
+    )
+    train['maybe_frnds_ratio'] = train.apply(
+    lambda r:  r['maybe_frnds'] * 1./ len(user_friends[r['user']]),
+    axis = 1
+    )
+    train['invited_frnds_ratio'] = train.apply(
+    lambda r:  r['invited_frnds'] * 1./ len(user_friends[r['user']]),
+    axis = 1
+    )
+    train['notinterested_frnds_ratio'] = train.apply(
+    lambda r:  r['notinterested_frnds'] * 1./ len(user_friends[r['user']]),
+    axis = 1
+    )
+    return train
+    
 def post_process(train, is_train):
     ## 1. add the friend_with_creator field based on user and creator
     ## load user_friends data
@@ -201,9 +230,12 @@ def post_process(train, is_train):
     print 'finish adding friend_with_creator', len(train)
     
     ## 2. add friends_interested, friends_maybe, friends_not_interested
+    ## and their ratios over all friends
     event_attendees = load_event_attendees(train)
     train = fill_friend_attendees(train, user_friends, event_attendees)
     print 'finish adding friends_xx', len(train)
+    train = fill_friend_attendee_ratios(train, user_friends, event_attendees)
+    print 'finish adding friends_xx ratios', len(train)
     
                                 
     ## 3. normalize missing values - fill all the ' ' empty values with 'NA'
@@ -265,9 +297,13 @@ def post_process(train, is_train):
                     'user_gender', 'friend_with_creator',
                     'event_interests', 'event_potential_interests',
                     'event_invites', 'event_nointerests',
+                    'event_interests_ratio', 'event_potential_interests_ratio', 
+                    'event_invites_ratio', 'event_nointerests_ratio',
                     'notification_ahead_hrs', 'user_age',
-                    'interested_frnds', 'maybe_frnds', 'invited_frnds', 
-                    'notinterested_frnds', 'topic', 'user_community']
+                    'interested_frnds', 'maybe_frnds', 'invited_frnds', 'notinterested_frnds',
+                    'interested_frnds_ratio', 'maybe_frnds_ratio', 
+                    'invited_frnds_ratio', 'notinterested_frnds_ratio', 
+                    'topic', 'user_community',]
     #outputs_in_use = ['interested', 'not_interested', 'interest_rank']
     outputs_in_use = ['interest_rank'] if is_train else []
     train = train[inputs_in_use+outputs_in_use]

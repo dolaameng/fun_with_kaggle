@@ -75,6 +75,7 @@ need events distinguishable for different users
 (*) ideally, users should be classified/clustered first, to form groups, based on their preference on events, and different classifiers are built for each user group, to classify their event interests.
 (*) missing piece - users are not quite distinguishable as events - clusters them based on their friends! 
 http://dev.bizo.com/2012/01/clustering-of-sparse-data-using-python.html
+(*) for recommendation rank - too many rank 4 (no interest, no non-interest, no invitation) - can we further distinguish them?
 
 
 (***) IN TRAIN.CSV, SAME USER_ID, EVENT_ID, DIFFERENT ROWS! e.g. uid, eid = 203456139	1462902079, usually they
