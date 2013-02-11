@@ -1,0 +1,25 @@
+## describe how to generate solution
+
+## 1. prepare data
+## download users.csv, user_friends.csv, events.csv, event_attendees.csv, train.csv, test.csv
+## into the "data" subfolder.
+
+## 2. find communities in user data
+cd data
+cat users.csv | cut -d , -f 1 > user_ids.csv # extract user ids
+cd ../python
+python generate_user_communities.py # generate user communities into ../data/user_communities.csv
+
+## 3. find topics in event data
+cd ../R
+# modify and run Rscript cluster_events.R
+## it generates event_clustersxx.csv
+
+## 4. prepare train and test files for classification/regression
+cd ../python
+python prepare_classification_file.py ../data/train.csv ../data/train_classifier.csv train
+python prepare_classification_file.py ../data/test.csv ../data/test_classifier.csv test
+
+## 5. benchmark classification/regression model
+cd ../R
+## run benchmark_rf.R or benchmark_gbm.R
