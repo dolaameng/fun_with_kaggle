@@ -249,9 +249,12 @@ def post_process(train, is_train):
                 axis = 1)
                 
     ## 4. notification ahead of event
+    ## notification time is not available in private test
+    
     train['notification_ahead_hrs'] = train.apply(
                                 lambda r: (parse(r['event_start_time']) - parse(r['timestamp'])).total_seconds() / 3600., 
                                 axis = 1)
+    
     ## 5. age
     train['user_age'] = train.apply(
                                 lambda r: 2013 - int(r['user_birthyear']) if r['user_birthyear'] is not normalized_na else normalized_na, 
@@ -296,7 +299,9 @@ def post_process(train, is_train):
     ## 8. select the most significant features
     ## select the useful features only
     inputs_in_use = ['user', 'event',
-                    'invited', ## invited is an output leakage - but it proves useful
+                    ## invited is an output leakage - but it proves useful 
+                    ## invited is not availabe in private test data anymore
+                    'invited', 
                     'user_locale',
                     'user_in_event_city', 'user_in_event_country',
                     'user_gender', 'friend_with_creator',
@@ -304,7 +309,9 @@ def post_process(train, is_train):
                     'event_invites', 'event_nointerests',
                     'event_interests_ratio', 'event_potential_interests_ratio', 
                     'event_invites_ratio', 'event_nointerests_ratio',
-                    'notification_ahead_hrs', 'user_age',
+                    ## notification_ahead_hrs is not available in private test anymore
+                    'notification_ahead_hrs', 
+                    'user_age',
                     'interested_frnds', 'maybe_frnds', 'invited_frnds', 'notinterested_frnds',
                     'interested_frnds_ratio', 'maybe_frnds_ratio', 
                     'invited_frnds_ratio', 'notinterested_frnds_ratio', 

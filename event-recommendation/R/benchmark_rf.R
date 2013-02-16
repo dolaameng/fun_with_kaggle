@@ -14,7 +14,8 @@ rmse <- function(obs, pred) {return(sqrt(mean((as.numeric(obs)-as.numeric(pred))
 imputation.method <- function(data){return (imputation(imethod='hotdeck',data,Value=3))} 
 
 ## load test data
-test.set <- read.csv('../data/test_classifier.csv', header=T)
+#test.set <- read.csv('../data/test_classifier.csv', header=T)
+test.set <- read.csv('../data/test_private_classifier.csv', header=T)
 ## load train data
 train.set <- read.csv('../data/train_classifier.csv', header=T)
 ## factorize

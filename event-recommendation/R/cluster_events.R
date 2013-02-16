@@ -25,7 +25,7 @@ event.words <- read.big.matrix('../data/event_words.csv', sep=',', header=T, typ
 
 ## kmeans clustering - about 15 mins
 k = 32 ## SIMPLY BECAUSE RANDOMFOREST IN R DOEST ALLOW MORE THAN 32 LEVELS
-event.clusters <- bigkmeans(event.words, centers=k, nstart=4, iter.max = 20)
+event.clusters <- bigkmeans(event.words, centers=k, nstart=4, iter.max = 40)
 
 
 ## write results
