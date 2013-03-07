@@ -1,0 +1,7 @@
+{
+	"raw_train_path": "../data/Train_rev1.csv",
+	"raw_valid_path": "../data/Valid_rev1.csv",
+	"feature_generators": {
+		"fg_1": {"input": "../data/Train_rev1.csv", "output": "../data/fg_1.csv"}
+	}
+}

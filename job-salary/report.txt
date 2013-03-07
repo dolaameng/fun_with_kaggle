@@ -1,0 +1,65 @@
+1. Missing values
+(1) train data (244769): 
+              Id              Title    FullDescription        LocationRaw LocationNormalized 
+               0                  1                  0                  0                  0 
+
+    ContractType       ContractTime            Company           Category          SalaryRaw 
+          179326              63905              32430                  0                  0 
+
+SalaryNormalized         SourceName 
+               0                  1
+
+(2) test data (40664):
+          Id              Title    FullDescription        LocationRaw LocationNormalized 
+           0                  0                  0                  0                  0 
+
+ContractType       ContractTime            Company           Category         SourceName 
+       29695              10482               5351                  0                  0
+
+2. Feature descriptions
+(*) Id:  interestingly, seems to be ....
+(*) Title: numbers removed (*****) - 
+					 normalized? (seems ngram more useful, rm *,puncutation)
+					 find the most fequent terms (in both train and test) - those are titles? - maybe similarity more useful
+					 clustering/tree-extracted features - to make them co-linear with target
+					 counter (bag of words) will be enough, no need for tf/idf
+(*) FullDescription: numbers removed (*****)
+					compared to Title and company and location, dont really think it is very useful
+					overlapping with title
+					NOT really useful except when comparing their distance - clustering/tree-extracted model will be enough
+					OUR CLIENT / MY CLIENT
+					KEY INFORMATION: Titled/Capitalized WORDS, calling, (send email) to sb., URL/Email, the role of, 
+					* CLUSTERING based on KEY INFORMATION
+(*) SalaryNormalized (target): mean of SalaryRaw or calculated by hour salary, all INTEGERS
+					skewed in the original form - almost bell after transformation (log) 
+					- http://fastml.com/predicting-advertised-salaries/
+					binning them - at least for analysis (e.g. every 1k) - correlation with features
+(*) Category - NOISE (related to Source) 
+							too many values 
+							combined with SOURCE?
+(*) ContractType - Missing value as another category 							
+(*) ContractTime - Missing value as another category
+(*) Source - see ContractType
+(*) Company - very informative, specially when combined with Title and other features
+							noise related to Source - SPECIALLY "LIMITED" <=> "LTD", remove punctuation, numbers should perserved
+							missing values - AS ANOTHER CATEGORY - leave it to the similarities based on other features 
+							Agent company - not that useful for prediction - too much variety
+							too many values
+(*) LocationRaw & LocationNormalized: 
+				LocationNormalized alone is not accurate enough - not the deepest level in the location_tree
+				SIMPLE STRATEGY - pick the first word from LocationRaw, if found in the tree, use it, otherwise use LocationNormlalized
+(*) Interactions between features (specially for linear models) :
+				TitleClustering*Location, FullDescriptionClustering*Location, Company*Location - preferred
+				(TitleClustering + FullDescriptionClustering + Company) * Category - Category seems to have NOISE
+				(TitleClustering + FullDescriptionClustering + Company) * ContractType 
+				(TitleClustering + FullDescriptionClustering + Company) * ContractTime
+(*) SalaryRaw - Ignored
+(*) Source - Ignored
+					
+
+3. Strategy - 
+(*) Got a feeling that NN based method will be more effective than linear or other model, 
+or at least the model should be based on some similarity measure (TreeEmbedding could be a good feature extractor),
+Tree models will also be good choices
+(*) extract text and do processing
+(*) missing values imputation - based KNN (specially job title and full description)
