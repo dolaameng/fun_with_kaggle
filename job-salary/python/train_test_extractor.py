@@ -2,7 +2,6 @@
 ## in the order that they appear in the train and test files
 
 import pandas as pd
-import json
 import sys
 
 def main():
@@ -11,8 +10,7 @@ def main():
         sys.exit(-1)
     dest_file = sys.argv[1]
     fields = sys.argv[2:]
-    setting = json.load(open('settings.json'))
-    train_file, test_file = setting['raw_train_path'], setting['raw_valid_path']
+    train_file, test_file = '../data/Train_rev1.csv', '../data/Valid_rev1.csv'
     train_df = pd.read_csv(train_file, header = 0)
     test_df = pd.read_csv(test_file, header = 0)
     merged_df = pd.concat([train_df.ix[:, fields], test_df.ix[:, fields]], axis = 0)

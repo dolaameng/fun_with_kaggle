@@ -1,4 +1,5 @@
 ## Generate the model for feature extraction of title data
+## NOTE the corpus is based on both train and validate files
 import sys, os.path, pickle
 import numpy as np
 import pandas as pd
@@ -77,7 +78,7 @@ def main():
         sys.exit(-1)
     ## write out model
     title_feature_extractor = TitleFeatureExtractor()
-    titles = np.array(pd.read_csv('../data/titles.csv', header = 0).Title.tolist())
+    titles = np.array(pd.read_csv(TITLE_FILE, header = 0).Title.tolist())
     title_feature_extractor.fit(titles)
     pickle.dump(title_feature_extractor, open(MODEL_FILE, 'w'))
     print 'title_feature model successfully generated ...'
