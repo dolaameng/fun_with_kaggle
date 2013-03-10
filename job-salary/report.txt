@@ -37,7 +37,9 @@ ContractType       ContractTime            Company           Category         So
 (*) Category - NOISE (related to Source) 
 							too many values 
 							combined with SOURCE?
-(*) ContractType - Missing value as another category 							
+(*) ContractType - Missing value as another category 	
+			- much more useful than ContractTime	
+			- imputation of missing values?					
 (*) ContractTime - Missing value as another category
 (*) Source - see ContractType
 (*) Company - very informative, specially when combined with Title and other features
@@ -54,7 +56,9 @@ ContractType       ContractTime            Company           Category         So
 				(TitleClustering + FullDescriptionClustering + Company) * ContractType 
 				(TitleClustering + FullDescriptionClustering + Company) * ContractTime
 (*) SalaryRaw - Ignored
-(*) Source - Ignored
+(*) Source - Ignored (combined with category)
+(***) different type of features seem relatively separate of each other, we can even do feature
+selection when building each type of feature extractor individually
 					
 
 3. Strategy - 
