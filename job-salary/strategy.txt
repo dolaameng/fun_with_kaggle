@@ -1,0 +1,9 @@
+(*) job full description => contract time (look for permanent, part-time)
+(*) company - remove all limited/ltd
+(*) use knn to imputate missing values
+(*) rank the different titles, companies and even full-descriptions
+
+(*) similar titles imply similar salaries - representative as clusters features - RANK
+(*) and so is description - RANK
+(*) contractTime and contractType - so encode them
+(*) location/company/category - use tree to feature extract
