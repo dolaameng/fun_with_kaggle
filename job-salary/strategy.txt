@@ -7,3 +7,8 @@
 (*) and so is description - RANK
 (*) contractTime and contractType - so encode them
 (*) location/company/category - use tree to feature extract
+
+(*) for title/description - (1) bin it by unique values (2) rougher bin by merging certain
+, considering using string distance (instead of bag of words) (3) tree based feature selection
+
+(*) multi category - (1) h clustering (2) tree based feature extraction
