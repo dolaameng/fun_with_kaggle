@@ -3,19 +3,25 @@ from sklearn.base import BaseEstimator
 from sklearn.feature_extraction import text
 from sklearn import feature_extraction
 from sklearn import cluster
+from sklearn import linear_model
 from joblib import Parallel, delayed
 from scipy import sparse
 import re, csv, sys
 import numpy as np
+import pandas as pd
 
 
 class BOWFeatureExtractor(BaseEstimator):
-    def __init__(self, field, max_features = 100, selected_features = None):
+    def __init__(self, field, max_features = 1000, 
+                min_df = 0.05, max_df = 0.95, 
+                ngram_range = (1, 1),
+                selected_features = None):
         ## max_features selects features based on their term frequences
         ## it makes a HUGE difference from randomly selecting the features
         self.counter = text.CountVectorizer(stop_words = 'english', 
-                        ngram_range = (1, 1), binary = True, 
+                        ngram_range = ngram_range, binary = True, 
                         max_features = max_features,
+                        max_df = max_df, min_df = min_df,
                         lowercase = True)
         self.field = field
         self.selected_features = selected_features
@@ -30,11 +36,24 @@ class BOWFeatureExtractor(BaseEstimator):
     def fit_transform(self, X, y=None):
         return self.fit(X, y).transform(X)
 
+class DescriptionSimplifier(BaseEstimator):
+    def __init__(self):
+        self.pattern = re.compile(r'\b[A-Z]\w+\b')
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X):
+        X['FullDescription'] = map(
+            lambda desc: ' '.join(self.pattern.findall(desc))
+            , X['FullDescription'])
+        return X
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
+
         
 class LocationFeatureExtractor(BaseEstimator):
     def __init__(self, max_features = 100):
         self.field = 'ProcessedLocation'
-        self.counter = BOWFeatureExtractor(self.field, max_features = max_features)
+        self.counter = BOWFeatureExtractor(self.field, max_features = max_features, max_df = 1, min_df = 1)
         self.LOCATION_TREE_FILE = '../data/Location_Tree.csv'
         ## BUILD dictionary based on location_tree - faster for search
         location_tree = [row[0].lower().split('~')[::-1] for row in csv.reader(open(self.LOCATION_TREE_FILE))]
@@ -69,6 +88,45 @@ class LocationFeatureExtractor(BaseEstimator):
                                             for initial in locations_initial]) ## CAPTITAL 'UK' for unfound
         X[self.field] = processed_locations
         return X
+
+class CompanyOneHotFeatureExtractor(BaseEstimator):
+    def __init__(self):
+        self.field = 'Company'
+        self.rm_pattern = re.compile('ltd|limited', re.IGNORECASE)
+        self.field_values = []
+        self.na_class = 'miss'
+        self.na_string = 'nan'
+        self.dicter = feature_extraction.DictVectorizer()
+    def fit(self, X, y=None):
+        sub_X = np.array(X[self.field].tolist())
+        sub_X[sub_X==self.na_string] = self.na_class
+        sub_X = map(
+            lambda com: self.rm_pattern.sub('', com.lower()).strip(),
+            sub_X
+        )
+        self.field_values = set(np.unique(sub_X))
+        sub_X = [{self.field:v} for v in sub_X]
+        self.dicter.fit(sub_X)
+        return self
+    def transform(self, X):
+        #print "!!!!!!!!!!!!DEBUG:", type(X), X.columns
+        sub_X = np.array(X[self.field].tolist())
+        sub_X[sub_X==self.na_string] = self.na_class
+        sub_X = map(
+            lambda com: self.rm_pattern.sub('', com.lower()).strip(),
+            sub_X
+        )
+        sub_X = map(
+            lambda com: com if (com in self.field_values) else self.na_class,
+            sub_X
+        )
+        sub_X = [{self.field:v} for v in sub_X]
+        
+        sub_X = self.dicter.transform(sub_X)
+        #print sub_X.shape
+        return sub_X
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
 
 class OneHotNAFeatureExtractor(BaseEstimator):
     def __init__(self, field, na_string = "nan", na_class = 'miss'):
@@ -139,6 +197,63 @@ class TitleClusterFeatureExtractor(BaseEstimator):
         dist_mat = np.hstack(distances)
         cluster_labels = np.argmin(dist_mat, axis = 1)
         return self.salaries[cluster_labels].reshape(-1, 1)
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
+
+class ContractTimeImputator(BaseEstimator):
+    def __init__(self):
+        pass
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X):
+        missed_contract_time = X.index[np.where(pd.isnull(X['ContractTime']))[0]]
+        to_be_permanent = [i for i in missed_contract_time if 'permanent' in X['FullDescription'][i].lower()]
+        contract_pattern = re.compile(r'\bcontract\b')
+        to_be_contract = [i for i in missed_contract_time if contract_pattern.findall(X['FullDescription'][i].lower())]
+        #print '!!!!!!DEBUG:', to_be_imputate[:10]
+        print 'DEBUG: ', len(to_be_permanent), 'ContractTime entries can be imputated as permanent'
+        print 'DEBUG: ', len(to_be_contract), 'ContractTime entries can be imputated as contract'
+        X.ix[to_be_permanent, 'ContractTime'] = 'permanent'
+        X.ix[to_be_contract, 'ContractTime'] = 'contract'
+        return X
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
+
+
+class ContractTypeImputator(BaseEstimator):
+    def __init__(self):
+        pass
+    def fit(self, X, y=None):
+        return self
+    def transform(self, X):
+        missed_contract_type = X.index[np.where(pd.isnull(X['ContractType']))[0]]
+        to_be_full = [i for i in missed_contract_type if 'full time' in X['FullDescription'][i].lower()]
+        to_be_part = [i for i in missed_contract_type if 'part time' in X['FullDescription'][i].lower()]
+        #print '!!!!!!DEBUG:', to_be_imputate[:10]
+        print 'DEBUG: ', len(to_be_full), 'ContractType entries can be imputated as full_time'
+        print 'DEBUG: ', len(to_be_part), 'ContractType entries can be imputated as part_time'
+        X.ix[to_be_full, 'ContractType'] = 'full_time'
+        X.ix[to_be_part, 'ContractType'] = 'part_time'
+        return X
+    def fit_transform(self, X, y=None):
+        return self.fit(X, y).transform(X)
+
+class SGDFeatureSelector(BaseEstimator):
+    def __init__(self, l1_ratio=0.15, coef_threshold = 0):
+        self.regressor = linear_model.SGDRegressor(loss='huber', penalty='l1', 
+                            alpha=0.0005, l1_ratio=l1_ratio, verbose=1)
+        self.coef_threshold = coef_threshold
+    def fit(self, X, y=None):
+        self.regressor.fit(X, y)
+        if self.coef_threshold is None:
+            self.coef_threshold = (max(self.regressor.coef_) - min(self.regressor.coef_))/2.
+        self.selected_features = np.where(abs(np.array(self.regressor.coef_)) > self.coef_threshold)[0]
+        #self.selected_features = range(X.shape[1])
+        #print '!!!!!!!!!!DEBUG:', self.regressor.coef_
+        print 'DEBUG: SGD selects ', len(self.selected_features), ' out of ', X.shape[1]
+        return self
+    def transform(self, X):
+        return X.tocsc()[:, self.selected_features]
     def fit_transform(self, X, y=None):
         return self.fit(X, y).transform(X)
 

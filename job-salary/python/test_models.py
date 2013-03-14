@@ -1,6 +1,7 @@
 from sklearn import cross_validation
 from sklearn import ensemble
 from sklearn import pipeline
+from sklearn.pipeline import Pipeline
 from sklearn import metrics
 import pandas as pd
 from feature_extractor import *
@@ -43,6 +44,7 @@ def main():
              , "Title": identity
              , "LocationRaw": identity
              , "LocationNormalized": identity
+             , "Company": identity
     }
 	print 'load data ...'
 	data = pd.read_csv('../data/Train_rev1.csv', header = 0, converters = converters)
@@ -51,6 +53,7 @@ def main():
 	train_indices, test_indices = cross_validation.train_test_split(range(ndata), test_size = 0.3)
 	(train, test) = (data.ix[train_indices, :], data.ix[test_indices, :])
 	## feature extraction of inputs
+	"""
 	bag_of_words = SpaseFeatureUnion(
 					[
 						('TitleBOW', BOWFeatureExtractor('Title')), 
@@ -60,6 +63,38 @@ def main():
 						('ContractTimeNA',OneHotNAFeatureExtractor('ContractTime')),
 						('ContractTypeNA', OneHotNAFeatureExtractor('ContractType')),
 						('TitleLevels', TitleClusterFeatureExtractor())
+					])
+	"""
+	bag_of_words = SpaseFeatureUnion(
+					[
+						('Category', Pipeline(steps = [
+							('CategoryOneHot', OneHotNAFeatureExtractor('Category')),
+							('SGSelector', SGDFeatureSelector()),
+						])),
+						#('Company', Pipeline(steps = [
+						#	('CompanyOneHot', CompanyOneHotFeatureExtractor()),
+						#	('SGSelector', SGDFeatureSelector()),
+						#])),
+						('ConractTime', Pipeline(steps =[ 
+							('ContractTimeImputator', ContractTimeImputator()),
+							('ContractTimeNA',OneHotNAFeatureExtractor('ContractTime')),
+						])),
+						('ContractType', Pipeline(steps = [
+							('ContractTypeImputator', ContractTypeImputator()),
+							('ContractTypeNA', OneHotNAFeatureExtractor('ContractType')),
+						])),
+						('Title', Pipeline(steps = [
+							('TitleBOW', BOWFeatureExtractor('Title', ngram_range = (1, 2), min_df = 2, max_df = 1.0)), 
+							('SGSelector', SGDFeatureSelector()),
+						])), 
+						('Desc', Pipeline(steps = [
+							('DescriptionSimplierf', DescriptionSimplifier()),
+							('DescriptionBOW', BOWFeatureExtractor('FullDescription')), 
+							('SGSelector', SGDFeatureSelector()),
+						])),
+						#('LocationBOW', BOWFeatureExtractor('LocationNormalized')),
+						('Location', LocationFeatureExtractor()),
+						#('TitleLevels', TitleClusterFeatureExtractor())
 					])
 	## transfomer for output - {identity, log_transformer}
 	identity_transformer = IdentityTransformer()
@@ -75,8 +110,13 @@ def main():
 	print '-----------test random forest on bag of words-------'
 	## LOG OF OUTPUT is better
 	#test_regressor(train, test, bag_of_words, identity_transformer, rf)
-	#test_regressor(train, test, bag_of_words, log_transformer, rf)
-	test_regressor(train, test, TitleClusterFeatureExtractor(), log_transformer, rf)
+	test_regressor(train, test, bag_of_words, log_transformer, rf)
+	"""
+	test_regressor(train, test, Pipeline(steps = [
+							('CompanyOneHot', CompanyOneHotFeatureExtractor()),
+							('SGSelector', SGDFeatureSelector()),
+						]), log_transformer, rf)
+	"""
 	#test_regressor(train, test, bag_of_words, log_transformer, random_rf)
 
 
