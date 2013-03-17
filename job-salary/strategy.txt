@@ -12,3 +12,18 @@
 , considering using string distance (instead of bag of words) (3) tree based feature selection
 
 (*) multi category - (1) h clustering (2) tree based feature extraction
+
+(**) FEATURE RANKING based on SGDRegressor:
+(*) for titles and descriptions: bag of words are more useful
+(*) for descriptions: Embedding tree based features are more useful
+(*) for locations: K-means based features and Embedding tree based features are more useful
+
+(**) use kd-tree for some raw features to extract new features
+(**) then use linear model or forest model
+
+(**) Use invert_index to extract useful vocabulary for titiles (1 and 2 gram)
+(**) build different ensemble based on different category - the difference is big enough within each group
+
+(**) text data is special -- hard to SEE the effect
+(**) dont  combine too many different features - hard to tune parameters
+(**) implementation - try many things - experience

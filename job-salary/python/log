@@ -1,0 +1,360 @@
+load data ...
+TEST SIZE: 48954
+TRAIN SHAPE------------ (244768, 12)
+fit regression model ...
+____________________________
+[3126, 1038, 2489, 7713, 6063, 8837, 3765, 17272, 17055, 3633, 6584, 291, 38483, 3455, 3939, 3263, 1331, 2255, 21846, 25174, 2332, 145, 7614, 8854, 1605, 1542, 21076, 11351, 12637]
+_____________________________
+------------training model for category  0 Travel Jobs --------------- (3126, 12)
+DEBUG: select  400 ngrams out of  5579
+DEBUG: select  400 ngrams out of  14007
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 1]
+DEBUG!!!!!!!!!!!!!! (3126, 801)
+------------training model for category  1 Property Jobs --------------- (1038, 12)
+DEBUG: select  72 ngrams out of  2104
+DEBUG: select  297 ngrams out of  7258
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [72, 297, 5]
+DEBUG!!!!!!!!!!!!!! (1038, 374)
+------------training model for category  2 Scientific & QA Jobs --------------- (2489, 12)
+DEBUG: select  225 ngrams out of  5527
+DEBUG: select  400 ngrams out of  16239
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [225, 400, 26]
+DEBUG!!!!!!!!!!!!!! (2489, 651)
+------------training model for category  3 HR & Recruitment Jobs --------------- (7713, 12)
+DEBUG: select  400 ngrams out of  9218
+DEBUG: select  400 ngrams out of  21292
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 23]
+DEBUG!!!!!!!!!!!!!! (7713, 823)
+------------training model for category  4 Customer Services Jobs --------------- (6063, 12)
+DEBUG: select  400 ngrams out of  8454
+DEBUG: select  400 ngrams out of  21107
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 48]
+DEBUG!!!!!!!!!!!!!! (6063, 848)
+------------training model for category  5 Trade & Construction Jobs --------------- (8837, 12)
+DEBUG: select  400 ngrams out of  9647
+DEBUG: select  400 ngrams out of  22752
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 74]
+DEBUG!!!!!!!!!!!!!! (8837, 874)
+------------training model for category  6 Manufacturing Jobs --------------- (3765, 12)
+DEBUG: select  240 ngrams out of  4443
+DEBUG: select  400 ngrams out of  14845
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [240, 400, 87]
+DEBUG!!!!!!!!!!!!!! (3765, 727)
+------------training model for category  7 Sales Jobs --------------- (17272, 12)
+DEBUG: select  400 ngrams out of  15342
+DEBUG: select  400 ngrams out of  36425
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 58]
+DEBUG!!!!!!!!!!!!!! (17272, 858)
+------------training model for category  8 Other/General Jobs --------------- (17055, 12)
+DEBUG: select  400 ngrams out of  24655
+DEBUG: select  400 ngrams out of  41518
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 64]
+DEBUG!!!!!!!!!!!!!! (17055, 864)
+------------training model for category  9 Logistics & Warehouse Jobs --------------- (3633, 12)
+DEBUG: select  348 ngrams out of  5267
+DEBUG: select  400 ngrams out of  14966
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [348, 400, 76]
+DEBUG!!!!!!!!!!!!!! (3633, 824)
+------------training model for category  10 Retail Jobs --------------- (6584, 12)
+DEBUG: select  400 ngrams out of  8598
+DEBUG: select  400 ngrams out of  19644
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 13]
+DEBUG!!!!!!!!!!!!!! (6584, 813)
+------------training model for category  11 Domestic help & Cleaning Jobs --------------- (291, 12)
+DEBUG: select  61 ngrams out of  781
+DEBUG: select  400 ngrams out of  3528
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [61, 400, 1]
+DEBUG!!!!!!!!!!!!!! (291, 462)
+------------training model for category  12 IT Jobs --------------- (38483, 12)
+DEBUG: select  400 ngrams out of  36371
+DEBUG: select  400 ngrams out of  57348
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 55]
+DEBUG!!!!!!!!!!!!!! (38483, 855)
+------------training model for category  13 Social work Jobs --------------- (3455, 12)
+DEBUG: select  219 ngrams out of  4823
+DEBUG: select  400 ngrams out of  10348
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [219, 400, 13]
+DEBUG!!!!!!!!!!!!!! (3455, 632)
+------------training model for category  14 Legal Jobs --------------- (3939, 12)
+DEBUG: select  164 ngrams out of  5425
+DEBUG: select  400 ngrams out of  11936
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [164, 400, 17]
+DEBUG!!!!!!!!!!!!!! (3939, 581)
+------------training model for category  15 Consultancy Jobs --------------- (3263, 12)
+DEBUG: select  126 ngrams out of  6205
+DEBUG: select  400 ngrams out of  18495
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [126, 400, 20]
+DEBUG!!!!!!!!!!!!!! (3263, 546)
+------------training model for category  16 Graduate Jobs --------------- (1331, 12)
+DEBUG: select  144 ngrams out of  3293
+DEBUG: select  400 ngrams out of  12018
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [144, 400, 11]
+DEBUG!!!!!!!!!!!!!! (1331, 555)
+------------training model for category  17 Energy, Oil & Gas Jobs --------------- (2255, 12)
+DEBUG: select  98 ngrams out of  4559
+DEBUG: select  400 ngrams out of  13251
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [98, 400, 11]
+DEBUG!!!!!!!!!!!!!! (2255, 509)
+------------training model for category  18 Accounting & Finance Jobs --------------- (21846, 12)
+DEBUG: select  400 ngrams out of  17848
+DEBUG: select  400 ngrams out of  34926
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 47]
+DEBUG!!!!!!!!!!!!!! (21846, 847)
+------------training model for category  19 Engineering Jobs --------------- (25174, 12)
+DEBUG: select  400 ngrams out of  21193
+DEBUG: select  400 ngrams out of  41582
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 100]
+DEBUG!!!!!!!!!!!!!! (25174, 900)
+------------training model for category  20 Charity & Voluntary Jobs --------------- (2332, 12)
+DEBUG: select  241 ngrams out of  3925
+DEBUG: select  400 ngrams out of  11377
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [241, 400, 6]
+DEBUG!!!!!!!!!!!!!! (2332, 647)
+------------training model for category  21 Part time Jobs --------------- (145, 12)
+DEBUG: select  117 ngrams out of  1357
+FullDescription
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [117, 275, 1]
+DEBUG!!!!!!!!!!!!!! (145, 393)
+------------training model for category  22 Admin Jobs --------------- (7614, 12)
+DEBUG: select  400 ngrams out of  9934
+DEBUG: select  400 ngrams out of  23380
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 51]
+DEBUG!!!!!!!!!!!!!! (7614, 851)
+------------training model for category  23 PR, Advertising & Marketing Jobs --------------- (8854, 12)
+DEBUG: select  368 ngrams out of  9074
+DEBUG: select  400 ngrams out of  23061
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [368, 400, 48]
+DEBUG!!!!!!!!!!!!!! (8854, 816)
+------------training model for category  24 Creative & Design Jobs --------------- (1605, 12)
+DEBUG: select  83 ngrams out of  3497
+DEBUG: select  400 ngrams out of  12121
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [83, 400, 26]
+DEBUG!!!!!!!!!!!!!! (1605, 509)
+------------training model for category  25 Maintenance Jobs --------------- (1542, 12)
+DEBUG: select  115 ngrams out of  1701
+DEBUG: select  400 ngrams out of  8713
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [115, 400, 36]
+DEBUG!!!!!!!!!!!!!! (1542, 551)
+------------training model for category  26 Healthcare & Nursing Jobs --------------- (21076, 12)
+DEBUG: select  400 ngrams out of  21776
+DEBUG: select  400 ngrams out of  32685
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 52]
+DEBUG!!!!!!!!!!!!!! (21076, 852)
+------------training model for category  27 Hospitality & Catering Jobs --------------- (11351, 12)
+DEBUG: select  400 ngrams out of  13605
+DEBUG: select  400 ngrams out of  23670
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 70]
+DEBUG!!!!!!!!!!!!!! (11351, 870)
+------------training model for category  28 Teaching Jobs --------------- (12637, 12)
+DEBUG: select  400 ngrams out of  15022
+DEBUG: select  400 ngrams out of  27557
+ProcessedLocation
+FEATUTRE DISTRIBUTION: [400, 400, 34]
+DEBUG!!!!!!!!!!!!!! (12637, 834)
+TRAIN SHAPE------------ (244768, 12)
+---------------predicting using model category 0 Travel Jobs -------------- (635, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 1]
+DEBUG!!!!!!!!!!!!!! (635, 801)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Travel Jobs : 6377.71078613
+---------------predicting using model category 1 Property Jobs -------------- (226, 12)
+FEATUTRE DISTRIBUTION: [72, 297, 5]
+DEBUG!!!!!!!!!!!!!! (226, 374)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Property Jobs : 7152.88039368
+---------------predicting using model category 2 Scientific & QA Jobs -------------- (466, 12)
+FEATUTRE DISTRIBUTION: [225, 400, 26]
+DEBUG!!!!!!!!!!!!!! (466, 651)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Scientific & QA Jobs : 8006.27731984
+---------------predicting using model category 3 HR & Recruitment Jobs -------------- (1543, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 23]
+DEBUG!!!!!!!!!!!!!! (1543, 823)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: HR & Recruitment Jobs : 10924.093084
+---------------predicting using model category 4 Customer Services Jobs -------------- (1144, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 48]
+DEBUG!!!!!!!!!!!!!! (1144, 848)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Customer Services Jobs : 4928.06694339
+---------------predicting using model category 5 Trade & Construction Jobs -------------- (1761, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 74]
+DEBUG!!!!!!!!!!!!!! (1761, 874)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Trade & Construction Jobs : 10898.8756489
+---------------predicting using model category 6 Manufacturing Jobs -------------- (775, 12)
+FEATUTRE DISTRIBUTION: [240, 400, 87]
+DEBUG!!!!!!!!!!!!!! (775, 727)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Manufacturing Jobs : 8193.87456314
+---------------predicting using model category 7 Sales Jobs -------------- (3496, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 58]
+DEBUG!!!!!!!!!!!!!! (3496, 858)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Sales Jobs : 23264.8311738
+---------------predicting using model category 8 Other/General Jobs -------------- (3372, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 64]
+DEBUG!!!!!!!!!!!!!! (3372, 864)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Other/General Jobs : 14399.8173634
+---------------predicting using model category 9 Logistics & Warehouse Jobs -------------- (721, 12)
+FEATUTRE DISTRIBUTION: [348, 400, 76]
+DEBUG!!!!!!!!!!!!!! (721, 824)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Logistics & Warehouse Jobs : 7617.24174506
+---------------predicting using model category 10 Retail Jobs -------------- (1317, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 13]
+DEBUG!!!!!!!!!!!!!! (1317, 813)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Retail Jobs : 11563.1521331
+---------------predicting using model category 11 Domestic help & Cleaning Jobs -------------- (51, 12)
+FEATUTRE DISTRIBUTION: [61, 400, 1]
+DEBUG!!!!!!!!!!!!!! (51, 462)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Domestic help & Cleaning Jobs : 3395.24398926
+---------------predicting using model category 12 IT Jobs -------------- (7681, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 55]
+DEBUG!!!!!!!!!!!!!! (7681, 855)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: IT Jobs : 15400.3940111
+---------------predicting using model category 13 Social work Jobs -------------- (706, 12)
+FEATUTRE DISTRIBUTION: [219, 400, 13]
+DEBUG!!!!!!!!!!!!!! (706, 632)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Social work Jobs : 8119.72025957
+---------------predicting using model category 14 Legal Jobs -------------- (754, 12)
+FEATUTRE DISTRIBUTION: [164, 400, 17]
+DEBUG!!!!!!!!!!!!!! (754, 581)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Legal Jobs : 13432.4613906
+---------------predicting using model category 15 Consultancy Jobs -------------- (644, 12)
+FEATUTRE DISTRIBUTION: [126, 400, 20]
+DEBUG!!!!!!!!!!!!!! (644, 546)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Consultancy Jobs : 12489.6768948
+---------------predicting using model category 16 Graduate Jobs -------------- (278, 12)
+FEATUTRE DISTRIBUTION: [144, 400, 11]
+DEBUG!!!!!!!!!!!!!! (278, 555)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Graduate Jobs : 10992.7793156
+---------------predicting using model category 17 Energy, Oil & Gas Jobs -------------- (452, 12)
+FEATUTRE DISTRIBUTION: [98, 400, 11]
+DEBUG!!!!!!!!!!!!!! (452, 509)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Energy, Oil & Gas Jobs : 17725.8575555
+---------------predicting using model category 18 Accounting & Finance Jobs -------------- (4403, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 47]
+DEBUG!!!!!!!!!!!!!! (4403, 847)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Accounting & Finance Jobs : 15099.0454512
+---------------predicting using model category 19 Engineering Jobs -------------- (4920, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 100]
+DEBUG!!!!!!!!!!!!!! (4920, 900)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Engineering Jobs : 9950.65955161
+---------------predicting using model category 20 Charity & Voluntary Jobs -------------- (490, 12)
+FEATUTRE DISTRIBUTION: [241, 400, 6]
+DEBUG!!!!!!!!!!!!!! (490, 647)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Charity & Voluntary Jobs : 6405.22677243
+---------------predicting using model category 21 Part time Jobs -------------- (23, 12)
+FEATUTRE DISTRIBUTION: [117, 275, 1]
+DEBUG!!!!!!!!!!!!!! (23, 393)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Part time Jobs : 1720.48318564
+---------------predicting using model category 22 Admin Jobs -------------- (1528, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 51]
+DEBUG!!!!!!!!!!!!!! (1528, 851)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Admin Jobs : 6250.66959656
+---------------predicting using model category 23 PR, Advertising & Marketing Jobs -------------- (1761, 12)
+FEATUTRE DISTRIBUTION: [368, 400, 48]
+DEBUG!!!!!!!!!!!!!! (1761, 816)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: PR, Advertising & Marketing Jobs : 11032.2482747
+---------------predicting using model category 24 Creative & Design Jobs -------------- (330, 12)
+FEATUTRE DISTRIBUTION: [83, 400, 26]
+DEBUG!!!!!!!!!!!!!! (330, 509)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Creative & Design Jobs : 9316.1583869
+---------------predicting using model category 25 Maintenance Jobs -------------- (333, 12)
+FEATUTRE DISTRIBUTION: [115, 400, 36]
+DEBUG!!!!!!!!!!!!!! (333, 551)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Maintenance Jobs : 5136.11006981
+---------------predicting using model category 26 Healthcare & Nursing Jobs -------------- (4242, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 52]
+DEBUG!!!!!!!!!!!!!! (4242, 852)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Healthcare & Nursing Jobs : 11967.9936801
+---------------predicting using model category 27 Hospitality & Catering Jobs -------------- (2314, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 70]
+DEBUG!!!!!!!!!!!!!! (2314, 870)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Hospitality & Catering Jobs : 6939.95382579
+---------------predicting using model category 28 Teaching Jobs -------------- (2588, 12)
+FEATUTRE DISTRIBUTION: [400, 400, 34]
+DEBUG!!!!!!!!!!!!!! (2588, 834)
+/Library/Python/2.7/site-packages/scikit_learn-0.13.1-py2.7-macosx-10.7-intel.egg/sklearn/neighbors/regression.py:130: NeighborsWarning: kneighbors: neighbor k+1 and neighbor k have the same distance: results will be dependent on data order.
+  neigh_dist, neigh_ind = self.kneighbors(X)
+ACCURACY: Teaching Jobs : 9647.5123194
+TRAIN SHAPE------------ (244768, 12)
+evaluate error metrics ...
+Test error: 12371.9291258
+-----------test random forest on bag of words-------
